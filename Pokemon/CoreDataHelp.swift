@@ -21,6 +21,7 @@ func addAllPokemon() {
     createPokemon(name: "Psyduck", imageName: "psyduck")
     createPokemon(name: "Squirtle", imageName: "squirtle")
     createPokemon(name: "Zubat", imageName: "zubat")
+    createPokemon(name: "Caterpie", imageName: "caterpie")
     
     (UIApplication.shared.delegate as! AppDelegate).saveContext()
     print("ADDED!")
@@ -50,11 +51,33 @@ func getAllPokemon() -> [Pokemon] {
 }
 
 func getAllCaughtPokemons() -> [Pokemon] {
+     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    // Creating custom fetch request to only get the caught pokemon out of CoreData
+    let fetchRequest = Pokemon.fetchRequest() as NSFetchRequest<Pokemon>
+    // Predicate lets us define a parameter to choose objects in CoreData
+    fetchRequest.predicate = NSPredicate(format: "caught == %@", true as CVarArg)
+    
+    do{
+        let pokemons = try context.fetch(fetchRequest)
+        return pokemons
+    } catch {}
+    
     return []
 }
 
 
 func getAllUncaughtPokemons() -> [Pokemon] {
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    // Creating custom fetch request to only get the caught pokemon out of CoreData
+    let fetchRequest = Pokemon.fetchRequest() as NSFetchRequest<Pokemon>
+    // Predicate lets us define a parameter to choose objects in CoreData
+    fetchRequest.predicate = NSPredicate(format: "caught == %@", false as CVarArg)
+    
+    do{
+        let pokemons = try context.fetch(fetchRequest)
+        return pokemons
+    } catch {}
+    
     return []
 }
 
